@@ -1,0 +1,12 @@
+<div class="carousel-container container" *ngIf="items.length>0">
+  <carousel>
+    <ng-container *ngFor="let item of items;">
+      <ng-container *carouselItem>
+        <div class="item-content">
+          <img class="item" [src]="item.url">
+          <p class="label">{{item.title}}</p>
+        </div>
+      </ng-container>
+    </ng-container>
+  </carousel>
+</div>
