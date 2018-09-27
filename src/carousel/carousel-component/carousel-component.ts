@@ -15,6 +15,7 @@ export class CarouselComponent implements AfterViewInit, OnInit {
     @ContentChildren(CarouselItemDirective) items: QueryList<CarouselItemDirective>;
     @ViewChildren(CarouselItemElementDirective, { read: ElementRef }) private itemsElements: QueryList<ElementRef>;
     @ViewChild('carousel') private carousel: ElementRef;
+    @ViewChild('carouselWrapper') private carouselWrapper: ElementRef;
     @Input() timing = '250ms ease-in';
     @Input() showControls = true;
 
@@ -29,25 +30,25 @@ export class CarouselComponent implements AfterViewInit, OnInit {
 
     constructor(private builder: AnimationBuilder) {
         this.disableButton = false;
-        this.noOfSlidesInView = 4;
+        this.noOfSlidesInView = 0;
         this.disablePrevButton = true;
     }
     ngOnInit() {
     }
 
     ngAfterViewInit() {
+        const wrapperWidth = this.carouselWrapper.nativeElement.offsetWidth;
+        const indiviualItemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width + 45;
+        this.noOfSlidesInView = Math.floor(wrapperWidth / indiviualItemWidth);
+        this.itemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width * this.noOfSlidesInView;
         if (this.items.length > 0) {
             this.noOfSlides = Math.ceil(this.items.length / this.noOfSlidesInView);
         }
-        this.itemWidth = this.itemsElements.first.nativeElement.getBoundingClientRect().width * this.noOfSlidesInView;
-        this.carouselWrapperStyle = {
-            width: `${this.itemWidth}px`
-        };
     }
 
     next() {
         this.currentSlide = this.currentSlide + 1;
-        if (this.currentSlide  === this.noOfSlides) {
+        if (this.currentSlide === this.noOfSlides) {
             this.disableButton = true;
             this.disablePrevButton = false;
             return;
@@ -70,7 +71,6 @@ export class CarouselComponent implements AfterViewInit, OnInit {
         this.disableButton = false;
         this.currentSlide = this.currentSlide - 1;
         const offset = this.currentSlide * this.itemWidth;
-
         const myAnimation: AnimationFactory = this.buildAnimation(offset);
         this.player = myAnimation.create(this.carousel.nativeElement);
         this.player.play();

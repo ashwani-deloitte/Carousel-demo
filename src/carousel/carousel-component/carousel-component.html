@@ -1,6 +1,6 @@
-<section class="carousel-wrapper" [ngStyle]="carouselWrapperStyle">
-    <ul class="carousel-inner row" #carousel>
-      <li *ngFor="let item of items;" class="carousel-item col-md-3 col-sm-12">
+<section class="carousel-wrapper" #carouselWrapper>
+    <ul class="carousel-inner" #carousel>
+      <li *ngFor="let item of items;" class="carousel-item">
         <ng-container [ngTemplateOutlet]="item.tpl"></ng-container>
       </li>
     </ul>
